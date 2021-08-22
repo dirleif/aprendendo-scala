@@ -46,11 +46,77 @@ Em muitos casos, isso pode ser feito sem o uso de recursos de metaprogramação,
 
 ## Scala interopera
 
-Scala foi projetado para interoperar bem com o popular *Java Runtime Environment (JRE)*. Em particular, a interação com a linguagem de programação Java orientada a objetos mainstream é tão perfeita quanto possível. Recursos Java mais recentes como SAMs, lambdas, anotações e genéricos têm análogos diretos no Scala.
+Scala foi projetado para interoperar bem com o popular *Java Runtime Environment (JRE)*. Em particular, a interação com a linguagem de programação Java orientada a objetos é tão perfeita quanto possível. Recursos Java mais recentes como SAMs, [lambdas](https://docs.scala-lang.org/tour/higher-order-functions.html|lambdas), [annotations](https://docs.scala-lang.org/tour/annotations.html|annotations) e [generics](https://docs.scala-lang.org/tour/generic-classes.html|generics) têm análogos diretos no Scala.
 
 Esses recursos do Scala sem análogos do Java, como parâmetros padrão e nomeados, compilam o mais próximo possível do Java quanto razoavelmente possível. Scala tem o mesmo modelo de compilação (compilação separada, carregamento dinâmico de classe) que Java e permite acesso a milhares de bibliotecas de alta qualidade existentes.
 
-Você pode experimentar Scala sem precisar instalar em seu computador, acesse https://scastie.scala-lang.org.
+Vejamos um comparativo em termos de recursos do que pode ser representado diretamente em bytecode na JVM entre uma classe Java bem simples e uma classe equivalente em Scala.
+
+```java
+public class Foto {
+  private final String id;
+  private final String owner;
+
+  public Foto(String id, String owner) {
+    this.id = id;
+    this.owner = owner;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public String getOwner() {
+    return owner;
+  }
+}
+```
+Usaremos o comando javap para examinar a estrutura do código compilado:
+
+```bash
+$ javac Foto.java
+$ javap -p Foto
+Compiled from "Foto.java"
+public class Foto {
+  private final java.lang.String id;
+  private final java.lang.String owner;
+  public Foto(java.lang.String, java.lang.String);
+  public java.lang.String getId();
+  public java.lang.String getOwner();
+}
+```
+
+Conforme mencionado acima vamos fazer o equivalente com uma classe Scala.
+
+```scala
+class Foto(val id: String, val owner: String)
+```
+
+```bash
+$ scalac Foto.scala
+$ javap -p Foto
+Compiled from "Foto.scala"
+public class Foto {
+  private final java.lang.String id;
+  private final java.lang.String owner;
+  public java.lang.String id();
+  public java.lang.String owner();
+  public Foto(java.lang.String, java.lang.String);
+}
+```
+Aqui podemos perceber uma das vantagens da linguagem Scala, com muito menos esforço podemos criar um script equivalente e que gera um bytecode praticamente igual.
+
+> Você pode experimentar Scala sem precisar instalar em seu computador, acesse https://scastie.scala-lang.org.
+
+## Um pouco de história
+
+A linguagem Scala foi criada por Martin Odersky, na [EPFL](https://www.epfl.ch) (École Polytechnique Fédérale de Lausanne), na Suíça e significa *Scalable Language*. 
+
+Odersky trabalhou em diversas linguagens e compiladores, entre eles o próprio javac, e no Java Generics. Além das experiências anteriores, dois outros projetos liderados por Odersky influenciaram a criação do Scala: a linguagem [Funnel](http://lampwww.epfl.ch/funnel/), uma linguagem funcional altamente acadêmica e implementada em Java e [Pizza](http://pizzacompiler.sourceforge.net/), uma extensão para a linguagem Java que adicionava, entre outras coisas, Programação Funcional.
+
+Como muitos projetos de pesquisa, Scala começou sendo pouco adequado para ambientes de produção, tendo um foco mais acadêmico. Mas isso mudou muito desde a versão 2 da linguagem e, em especial, desde que o Twitter começou a adotar a linguagem, em 2007.
+
+Ser desenvolvida por uma equipe de pesquisa poderia ser uma desvantagem em alguns cenários. Para resolver esse problema, e melhorar o ciclo de evolução da linguagem Scala, Martin Oderky e Jonas Bonér criaram a Typesafe, que mais tarde foi renomeada para [Lightbend](https://www.lightbend.com/). Ela é uma empresa que recebeu investimentos do mercado financeiro e hoje é responsável por garantir o futuro da linguagem Scala e alguns frameworks importantes, como o [Akka](https://akka.io) e o [Play Framework](https://www.playframework.com).
 
 #### License
 [MIT](https://github.com/dirleif/entendendo-docker-e-docker-compose/blob/main/LICENSE)
@@ -62,6 +128,10 @@ Você pode experimentar Scala sem precisar instalar em seu computador, acesse ht
 <https://docs.scala-lang.org>
 
 <https://scastie.scala-lang.org>
+
+<https://www.scala-lang.org/api/current/>
+
+<https://www.casadocodigo.com.br/pages/sumario-scala>
 
 
 [license-badge]: https://img.shields.io/github/license/dirleif/entendendo-docker-e-docker-compose
